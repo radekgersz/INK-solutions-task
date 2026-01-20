@@ -1,5 +1,7 @@
 package conversation;
 
+import java.util.UUID;
+
 public interface ConversationOrchestrator {
-    String handleUserMessage(int conversationId, String userMessage);
+    String handleUserMessage(UUID conversationId, String userMessage);
 }

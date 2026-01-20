@@ -1,4 +1,7 @@
 package agents;
 
-public abstract class Agent {
+import conversation.Conversation;
+
+public interface Agent {
+    public String respond(Conversation conversation);
 }

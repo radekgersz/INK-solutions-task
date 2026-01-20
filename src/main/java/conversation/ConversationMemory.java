@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConversationMemory {
     private final Map<UUID, Conversation> conversations = new ConcurrentHashMap<>();
 
-    Conversation getConversation(UUID id){
+    Conversation getOrCreateConversation(UUID id){
         return conversations.computeIfAbsent(
                 id,
                 Conversation::new
