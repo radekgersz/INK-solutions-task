@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface Agent {
-    public String respond(Conversation conversation);
+    String respond(Conversation conversation);
 }

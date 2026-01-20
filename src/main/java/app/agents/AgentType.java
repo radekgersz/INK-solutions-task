@@ -3,5 +3,5 @@ package app.agents;
 public enum AgentType {
     TECHNICAL,
     BILLING,
-    OTHER
+    OUT_OF_SCOPE
 }

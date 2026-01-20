@@ -21,7 +21,7 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
         this.memory = memory;
         this.router = router;
         this.agents = Map.of(
-                AgentType.OTHER, echoAgent
+                AgentType.OUT_OF_SCOPE, echoAgent
         );
     }
 
