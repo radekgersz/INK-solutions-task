@@ -2,7 +2,9 @@ package app.router;
 
 import app.agents.AgentType;
 import app.conversation.Conversation;
+import org.springframework.stereotype.Component;
+
 
 public interface AgentRouter {
-    public AgentType route(Conversation conversation);
+    AgentType route(Conversation conversation);
 }
