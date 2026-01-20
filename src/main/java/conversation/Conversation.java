@@ -4,18 +4,19 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static conversation.Role.ASSISTANT;
 import static conversation.Role.USER;
 
 @Getter
 public class Conversation {
-    private final int conversationID;
+    private final UUID conversationID;
 
 
-    private ArrayList<ChatMessage> messages = new ArrayList<>();
+    private final ArrayList<ChatMessage> messages = new ArrayList<>();
 
-    public Conversation(int conversationID){
+    public Conversation(UUID conversationID){
         this.conversationID = conversationID;
     }
 
