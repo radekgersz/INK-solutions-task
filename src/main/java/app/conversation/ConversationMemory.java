@@ -1,4 +1,4 @@
-package conversation;
+package app.conversation;
 
 import java.util.Map;
 import java.util.UUID;

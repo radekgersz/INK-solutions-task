@@ -1,4 +1,4 @@
-package agents;
+package app.agents;
 
 public enum AgentType {
     TECHNICAL,

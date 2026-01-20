@@ -1,0 +1,19 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+# curl -X POST http://localhost:8080/chat
+#  -H "Content-Type: application/json"
+#  -d '{
+#    "message": "Hello"
+#  }'
+POST http://localhost:8080/chat
+Content-Type: application/json
+
+{
+  "message": "Hello"
+}
+
+###

@@ -1,4 +1,6 @@
-package conversation;
+package app.conversation;
+
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 

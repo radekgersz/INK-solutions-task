@@ -1,4 +1,4 @@
-package conversation;
+package app.conversation;
 
 import lombok.Getter;
 
@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static conversation.Role.ASSISTANT;
-import static conversation.Role.USER;
+import static app.conversation.Role.ASSISTANT;
+import static app.conversation.Role.USER;
 
 @Getter
 public class Conversation {

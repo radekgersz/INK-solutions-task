@@ -1,9 +1,10 @@
-package conversation;
+package app.conversation;
 
-import agents.Agent;
-import agents.AgentType;
+import app.agents.Agent;
+import app.agents.AgentType;
 import lombok.AllArgsConstructor;
-import router.AgentRouter;
+import org.springframework.stereotype.Component;
+import app.router.AgentRouter;
 
 import java.util.Map;
 import java.util.UUID;

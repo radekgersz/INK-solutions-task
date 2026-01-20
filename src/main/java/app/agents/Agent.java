@@ -1,6 +1,6 @@
-package agents;
+package app.agents;
 
-import conversation.Conversation;
+import app.conversation.Conversation;
 
 public interface Agent {
     public String respond(Conversation conversation);

@@ -1,4 +1,4 @@
-package conversation;
+package app.conversation;
 
 import lombok.Getter;
 
