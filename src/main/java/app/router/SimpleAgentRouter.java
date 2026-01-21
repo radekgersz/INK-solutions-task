@@ -5,6 +5,7 @@ import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
 import app.clients.LlmClient;
+import app.properties.PromptProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,26 +13,12 @@ import java.util.List;
 @Component
 public class SimpleAgentRouter implements AgentRouter {
 
-    private static final String ROUTING_PROMPT = """
-        You are a classifier that decides which support agent should handle a user request.
-
-        Agent types:
-        - TECHNICAL: product usage, errors, APIs, integrations
-        - BILLING: pricing, plans, payments, refunds
-        - OUT_OF_SCOPE: anything else
-
-        Return ONLY one of:
-        TECHNICAL
-        BILLING
-        OUT_OF_SCOPE
-        
-        Do not justify your response.
-        """;
-
+    private final String routingPrompt;
     private final LlmClient llmClient;
 
-    public SimpleAgentRouter(LlmClient llmClient) {
+    public SimpleAgentRouter(LlmClient llmClient, PromptProperties promptProperties) {
         this.llmClient = llmClient;
+        this.routingPrompt = promptProperties.getRouting();
     }
 
     @Override
@@ -52,7 +39,7 @@ public class SimpleAgentRouter implements AgentRouter {
             throw new IllegalStateException("No user message found");
         }
         List<ChatMessage> prompt = List.of(
-                new ChatMessage(Role.SYSTEM, ROUTING_PROMPT),
+                new ChatMessage(Role.SYSTEM, routingPrompt),
                 lastUserMessage
         );
 

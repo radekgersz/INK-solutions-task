@@ -3,6 +3,7 @@ package app.billing;
 import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Role;
+import app.properties.PromptProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,36 +11,19 @@ import java.util.List;
 @Component
 public class BillingIntentClassifier {
 
-    private static final String INTENT_PROMPT = """
-        You are a billing intent classifier.
-
-        Possible intents:
-        - LIST_PLANS: user wants to see available plans or pricing
-        - SUBSCRIBE_PLAN: user wants to start or change a subscription
-        - CANCEL_SUBSCRIPTION: user wants to cancel or stop a subscription
-        - OUT_OF_SCOPE: user is asking something related to billing but not covered by the above intents
-        - UNKNOWN: anything else
-
-        Return ONLY one of:
-        LIST_PLANS
-        SUBSCRIBE_PLAN
-        CANCEL_SUBSCRIPTION
-        OUT_OF_SCOPE
-        UNKNOWN
-
-        Do not explain your answer.
-        """;
+    private final String intentPrompt;
 
     private final LlmClient llmClient;
 
-    public BillingIntentClassifier(LlmClient llmClient) {
+    public BillingIntentClassifier(LlmClient llmClient, PromptProperties promptProperties) {
         this.llmClient = llmClient;
+        this.intentPrompt = promptProperties.getIntent();
     }
 
     public BillingIntent classify(String userMessage) {
 
         List<ChatMessage> prompt = List.of(
-                new ChatMessage(Role.SYSTEM, INTENT_PROMPT),
+                new ChatMessage(Role.SYSTEM, intentPrompt),
                 new ChatMessage(Role.USER, userMessage)
         );
 
