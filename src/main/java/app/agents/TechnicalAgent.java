@@ -4,7 +4,7 @@ import app.conversation.Conversation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TechnicalAgent implements Agent{
+public class TechnicalAgent implements Agent {
     @Override
     public String respond(Conversation conversation) {
         return "";

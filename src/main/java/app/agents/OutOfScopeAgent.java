@@ -30,8 +30,6 @@ public class OutOfScopeAgent implements Agent {
                 new ChatMessage(Role.SYSTEM, GENERAL_PROMPT),
                 new ChatMessage(Role.USER, userText)
         );
-
-        String response = llmClient.generateResponse(prompt);
-        return response;
+        return llmClient.generateResponse(prompt);
     }
 }
