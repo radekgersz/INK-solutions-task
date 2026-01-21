@@ -27,14 +27,14 @@ public class BillingAgent implements Agent {
 
         return switch (intent) {
             case LIST_PLANS -> handleListPlans();
-            case SUBSCRIBE_PLAN -> handleSubscribe(userText);
-            case CANCEL_SUBSCRIPTION -> handleCancel(userText);
+            case SUBSCRIBE_PLAN -> handleSubscribe();
+            case CANCEL_SUBSCRIPTION -> handleCancel();
             case OUT_OF_SCOPE -> "I'm sorry, I cannot help you with that. I can only help with plans, subscriptions, or cancellations";
             case UNKNOWN -> "I can help with plans, subscriptions, or cancellations. What would you like to do?";
         };
     }
 
-    private String handleCancel(String userText) {
+    private String handleCancel() {
         return """
         To cancel a subscription, please provide the following details:
 
@@ -48,17 +48,17 @@ public class BillingAgent implements Agent {
         Reason: <your reason>
         """;
     }
-    private String handleSubscribe(String userText) {
-            return """
-        To start a subscription, please provide the following details:
-
-        - Plan name (Free, Pro, Custom, Enterprise)
-        - Billing email address
-
-        Please reply in the following format:
-        Plan: <plan name>
-        Email: <your email>
-        """;
+    private String handleSubscribe() {
+        return """
+                To start a subscription, please provide the following details:
+                
+                - Plan name (Free, Pro, Custom, Enterprise)
+                - Billing email address
+                
+                Please reply in the following format:
+                Plan: <plan name>
+                Email: <your email>
+                """;
         }
 
     private String handleListPlans() {

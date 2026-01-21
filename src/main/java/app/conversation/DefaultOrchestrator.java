@@ -15,11 +15,11 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
     private final Map<AgentType, Agent> agents;
 
 
-    public DefaultOrchestrator(ConversationMemory memory, AgentRouter router, EchoAgent echoAgent, BillingAgent billingAgent, TechnicalAgent technicalAgent){
+    public DefaultOrchestrator(ConversationMemory memory, AgentRouter router, OutOfScopeAgent outOfScopeAgent, BillingAgent billingAgent, TechnicalAgent technicalAgent){
         this.memory = memory;
         this.router = router;
         this.agents = Map.of(
-                AgentType.OUT_OF_SCOPE, echoAgent,
+                AgentType.OUT_OF_SCOPE, outOfScopeAgent,
                 AgentType.BILLING, billingAgent,
                 AgentType.TECHNICAL, technicalAgent
         );
