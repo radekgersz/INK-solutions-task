@@ -1,11 +1,11 @@
-package app.llm;
+package app.clients;
 
 import app.conversation.ChatMessage;
-import app.llm.dtos.requests.gemini.Content;
-import app.llm.dtos.requests.gemini.GeminiRequestDTO;
-import app.llm.dtos.requests.gemini.GenerationConfig;
-import app.llm.dtos.requests.gemini.Part;
-import app.llm.dtos.responses.gemini.GeminiResponseDTO;
+import app.clients.dtos.requests.gemini.Content;
+import app.clients.dtos.requests.gemini.GeminiRequestDTO;
+import app.clients.dtos.requests.gemini.GenerationConfig;
+import app.clients.dtos.requests.gemini.Part;
+import app.clients.dtos.responses.gemini.GeminiResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;

@@ -4,7 +4,7 @@ import app.agents.AgentType;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
-import app.llm.LlmClient;
+import app.clients.LlmClient;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

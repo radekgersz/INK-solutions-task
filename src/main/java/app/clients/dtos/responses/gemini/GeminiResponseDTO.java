@@ -1,4 +1,4 @@
-package app.llm.dtos.responses.gemini;
+package app.clients.dtos.responses.gemini;
 
 import java.util.List;
 

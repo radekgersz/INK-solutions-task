@@ -1,4 +1,4 @@
-package app.llm;
+package app.clients;
 
 import app.conversation.ChatMessage;
 
