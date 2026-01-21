@@ -3,7 +3,6 @@ package app.billing;
 import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Role;
-import app.billing.BillingIntent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

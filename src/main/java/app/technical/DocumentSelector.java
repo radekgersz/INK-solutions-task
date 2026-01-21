@@ -8,11 +8,12 @@ import java.util.Set;
 
 @Component
 public class DocumentSelector {
-
+    private static final int MIN_RELEVANCE_SCORE = 1;
     private final DocumentsCatalog catalog;
 
     public DocumentSelector(DocumentsCatalog catalog) {
         this.catalog = catalog;
+
     }
 
     public List<Document> selectRelevant(String userQuestion, int limit) {
@@ -23,8 +24,12 @@ public class DocumentSelector {
                 .toList();
 
         List<ScoredDocument> relevantDocuments = scoredDocuments.stream()
-                .filter(scored -> scored.score() > 0)
+                .filter(scored -> scored.score() >= MIN_RELEVANCE_SCORE)
                 .toList();
+
+        if (relevantDocuments.isEmpty()) {
+            return List.of(); //no relevant docs
+        }
 
         List<ScoredDocument> sortedDocuments = relevantDocuments.stream()
                 .sorted(Comparator.comparingInt(ScoredDocument::score).reversed())
@@ -34,6 +39,7 @@ public class DocumentSelector {
                 .limit(limit)
                 .map(ScoredDocument::document)
                 .toList();
+
 
     }
 
