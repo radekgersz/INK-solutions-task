@@ -7,6 +7,7 @@ import app.clients.dtos.requests.gemini.GenerationConfig;
 import app.clients.dtos.requests.gemini.Part;
 import app.clients.dtos.responses.gemini.GeminiResponseDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 import java.net.URI;
@@ -20,8 +21,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GeminiClient implements LlmClient {
 
-    private static final String GEMINI_MODEL = "gemini-2.5-flash";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/" + GEMINI_MODEL + ":generateContent";
+    @Value("${gemini.model}")
+    private static String GEMINI_MODEL;
+    @Value("${base.url}")
+    private static String BASE_URL;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String apiKey = System.getenv("GEMINI_API_KEY");
@@ -29,6 +32,7 @@ public class GeminiClient implements LlmClient {
 
     @Override
     public String generateResponse(List<ChatMessage> messages) {
+        String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
         try {
             GeminiRequestDTO request = createRequest(messages);
             String json = mapper.writeValueAsString(request);
