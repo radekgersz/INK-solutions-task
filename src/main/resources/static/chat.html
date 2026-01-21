@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: auto; }
+        #chat { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto; }
+        .user { color: #1a73e8; margin: 5px 0; }
+        .bot { color: #188038; margin: 5px 0; }
+        input { width: 80%; }
+        button { width: 18%; }
+    </style>
+</head>
+<body>
+
+<h2>Chatbot</h2>
+
+<div id="chat"></div>
+
+<input id="input" placeholder="Type a message..." />
+<button onclick="send()">Send</button>
+
+<script>
+    let conversationId = null;
+
+    async function send() {
+        const input = document.getElementById("input");
+        const message = input.value.trim();
+        if (!message) return;
+        input.value = "";
+
+        append("You", message, "user");
+
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message: message,
+                conversationId: conversationId
+            })
+        });
+
+        const data = await response.json();
+        conversationId = data.conversationId;
+
+        append("Bot", data.reply, "bot");
+    }
+
+    function append(sender, text, cls) {
+        const chat = document.getElementById("chat");
+        const div = document.createElement("div");
+        div.className = cls;
+        div.textContent = `${sender}: ${text}`;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
+</script>
+
+</body>
+</html>

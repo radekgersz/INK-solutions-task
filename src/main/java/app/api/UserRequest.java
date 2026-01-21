@@ -1,6 +1,6 @@
 package app.api;
 
-public record ChatRequest(
+public record UserRequest(
         String conversationId,
         String message
 ) {}

@@ -37,7 +37,7 @@ public class DocumentsCatalog {
                         "To keep connections alive, the server sends a 'ping' frame every 30 seconds; clients must respond with 'pong' within 10 seconds. " +
                         "All payloads must be JSON strings. Binary frames cause immediate disconnection (Code 1003). " +
                         "Reconnect using exponential backoff starting at 1s.",
-                Arrays.asList("websocket", "wss", "stream", "real-time", "heartbeat", "ping", "pong", "json")
+                Arrays.asList("websocket", "wss", "stream", "real-time", "heartbeat", "ping", "pong", "json","websockets")
         ));
 
         // ---------------------------------------------------------

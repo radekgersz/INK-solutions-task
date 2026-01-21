@@ -1,6 +1,6 @@
 package app.api;
 
-public record ChatResponse(
+public record AIResponse(
         String conversationId,
         String reply
 ) {}

@@ -10,16 +10,16 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/chat")
-public class ChatController {
+public class AIChatController {
 
     private final ConversationOrchestrator conversationOrchestrator;
 
-    public ChatController(ConversationOrchestrator conversationOrchestrator) {
+    public AIChatController(ConversationOrchestrator conversationOrchestrator) {
         this.conversationOrchestrator = conversationOrchestrator;
     }
 
     @PostMapping
-    public ChatResponse chat(@RequestBody ChatRequest request) {
+    public AIResponse chat(@RequestBody UserRequest request) {
 
         UUID conversationId = request.conversationId() != null
                 ? UUID.fromString(request.conversationId())
@@ -30,7 +30,7 @@ public class ChatController {
                 request.message()
         );
 
-        return new ChatResponse(conversationId.toString(), reply);
+        return new AIResponse(conversationId.toString(), reply);
     }
 }
 
