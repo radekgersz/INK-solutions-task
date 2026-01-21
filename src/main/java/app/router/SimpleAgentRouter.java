@@ -37,11 +37,20 @@ public class SimpleAgentRouter implements AgentRouter {
     @Override
     public AgentType route(Conversation conversation) {
 
-        ChatMessage lastUserMessage = conversation.getMessages().stream()
-                .filter(m -> m.getRole() == Role.USER)
-                .reduce((a, b) -> b)
-                .orElseThrow();
+        ChatMessage lastUserMessage = null;
+        List<ChatMessage> messages = conversation.getMessages();
 
+        for (int i = messages.size() - 1; i >= 0; i--) {
+            ChatMessage m = messages.get(i);
+            if (m.getRole() == Role.USER) {
+                lastUserMessage = m;
+                break;
+            }
+        }
+
+        if (lastUserMessage == null) {
+            throw new IllegalStateException("No user message found");
+        }
         List<ChatMessage> prompt = List.of(
                 new ChatMessage(Role.SYSTEM, ROUTING_PROMPT),
                 lastUserMessage

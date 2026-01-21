@@ -31,10 +31,8 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
         conversation.addUserMessage(userMessage);
         AgentType agentType = router.route(conversation);
         Agent agent = agents.get(agentType);
-
-//        String response = agent.respond(conversation);
-        String response = String.valueOf(agent);
-//        conversation.addAssistantMessage(response);
+        String response = agent.respond(conversation);
+        conversation.addAssistantMessage(response);
         // normally you would save the conversation, but we don't persist them here
         return response;
     }
