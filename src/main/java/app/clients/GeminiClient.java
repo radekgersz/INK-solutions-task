@@ -52,7 +52,7 @@ public class GeminiClient implements LlmClient {
     private GeminiRequestDTO createRequest(List<ChatMessage> messages){
         String payload = messages
                 .stream()
-                .map(ChatMessage::getContent)
+                .map(ChatMessage::content)
                 .collect(Collectors.joining("\n\n"));
 
         return new GeminiRequestDTO(

@@ -24,7 +24,7 @@ public class OutOfScopeAgent implements Agent {
     public String respond(Conversation conversation) {
         String userText = conversation.getLastUserMessage()
                 .orElseThrow()
-                .getContent();
+                .content();
 
         List<ChatMessage> prompt = List.of(
                 new ChatMessage(Role.SYSTEM, GENERAL_PROMPT),

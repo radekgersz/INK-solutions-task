@@ -1,0 +1,11 @@
+# Connection Handshake
+To establish a WebSocket connection, clients must perform a standard HTTP handshake at `wss://api.example.com/v1/stream`. The connection request must include the header `Upgrade: websocket`.
+
+# Heartbeats
+To prevent the connection from closing due to inactivity, the server sends a 'ping' frame every 30 seconds. The client must respond with a 'pong' frame within 10 seconds, or the connection will be terminated.
+
+# Message Format
+All messages sent and received over the WebSocket are strictly JSON strings. Binary data frames are not supported and will result in an immediate disconnection (Code 1003).
+
+# Reconnection Logic
+If a WebSocket connection drops unexpectedly, clients should implement an exponential backoff strategy for reconnection, starting with a 1-second delay and doubling up to a maximum of 60 seconds.

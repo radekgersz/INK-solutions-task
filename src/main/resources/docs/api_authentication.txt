@@ -1,0 +1,11 @@
+# API Keys
+For server-to-server communication, use static API Keys. These should be included in the header as `x-api-key: <your_key>`. Never expose these keys in client-side code or public repositories.
+
+# OAuth 2.0 Flow
+User-facing applications must use OAuth 2.0. The authorization code flow is required for web apps, exchanging a temporary code for an access token via the `/oauth/token` endpoint.
+
+# Bearer Tokens
+Once obtained, the access token must be sent in the `Authorization` header with the prefix 'Bearer '. For example: `Authorization: Bearer eyJhbGciOi...`.
+
+# Token Expiration
+Access tokens are valid for 1 hour. When a 401 Unauthorized response is received, use the Refresh Token (valid for 14 days) to request a new set of credentials without forcing the user to log in again.

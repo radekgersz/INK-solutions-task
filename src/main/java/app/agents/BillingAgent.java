@@ -21,7 +21,7 @@ public class BillingAgent implements Agent {
 
         String userText = conversation.getLastUserMessage()
                 .orElseThrow()
-                .getContent();
+                .content();
 
         BillingIntent intent = billingIntentClassifier.classify(userText);
 

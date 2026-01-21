@@ -42,7 +42,7 @@ public class SimpleAgentRouter implements AgentRouter {
 
         for (int i = messages.size() - 1; i >= 0; i--) {
             ChatMessage m = messages.get(i);
-            if (m.getRole() == Role.USER) {
+            if (m.role() == Role.USER) {
                 lastUserMessage = m;
                 break;
             }

@@ -1,7 +1,6 @@
 package app.conversation;
 
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class Conversation {
     public Optional<ChatMessage> getLastUserMessage() {
         for (int i = messages.size() - 1; i >= 0; i--) {
             ChatMessage message = messages.get(i);
-            if (message.getRole() == Role.USER) {
+            if (message.role() == Role.USER) {
                 return Optional.of(message);
             }
         }

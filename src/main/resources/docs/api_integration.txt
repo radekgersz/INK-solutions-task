@@ -1,0 +1,11 @@
+# Authentication
+All API requests require a valid Bearer Token in the Authorization header. Tokens are obtained via the OAuth2 login flow.
+
+# Rate Limiting
+To ensure system stability, the API limits clients to 60 requests per minute. Exceeding this returns a 429 Too Many Requests error.
+
+# Data Format
+The API accepts and returns data in JSON format exclusively. Ensure the 'Content-Type' header is set to 'application/json'.
+
+# Versioning
+The API uses URL-based versioning. The current stable version should always be included in the path, for example, '/v1/resource'.
