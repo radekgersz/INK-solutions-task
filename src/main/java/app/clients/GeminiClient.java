@@ -9,7 +9,6 @@ import app.clients.dtos.responses.gemini.GeminiResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -40,11 +39,9 @@ public class GeminiClient implements LlmClient {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
-            HttpResponse<String> response =
-                    httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            GeminiResponseDTO geminiResponse =
-                    mapper.readValue(response.body(), GeminiResponseDTO.class);
+            GeminiResponseDTO geminiResponse = mapper.readValue(response.body(), GeminiResponseDTO.class);
             log.info(String.valueOf(geminiResponse));
             return extractText(geminiResponse);
 
