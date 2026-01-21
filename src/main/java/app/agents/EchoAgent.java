@@ -10,7 +10,7 @@ public class EchoAgent implements Agent {
     @Override
     public String respond(Conversation conversation) {
         ChatMessage last = conversation.getMessages()
-                .get(conversation.getMessages().size() - 1);
+                .getLast();
         return "Echo: " + last.getContent();
     }
 }
