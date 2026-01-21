@@ -1,6 +1,4 @@
-package app.conversation;
-
-import org.springframework.stereotype.Component;
+package app.orchestrator;
 
 import java.util.UUID;
 

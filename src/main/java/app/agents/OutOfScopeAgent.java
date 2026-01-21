@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static app.agents.AgentType.OUT_OF_SCOPE;
+
 @Component
 @AllArgsConstructor
 public class OutOfScopeAgent implements Agent {
@@ -31,5 +33,10 @@ public class OutOfScopeAgent implements Agent {
                 new ChatMessage(Role.USER, userText)
         );
         return llmClient.generateResponse(prompt);
+    }
+
+    @Override
+    public AgentType type() {
+        return OUT_OF_SCOPE;
     }
 }

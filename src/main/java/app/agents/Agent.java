@@ -6,4 +6,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface Agent {
     String respond(Conversation conversation);
+    AgentType type();
 }

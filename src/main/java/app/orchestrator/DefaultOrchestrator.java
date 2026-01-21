@@ -1,9 +1,11 @@
-package app.conversation;
+package app.orchestrator;
 
-import app.agents.*;
-import org.springframework.stereotype.Component;
+import app.agents.Agent;
+import app.agents.AgentType;
+import app.conversation.Conversation;
+import app.conversation.ConversationMemory;
 import app.router.AgentRouter;
-
+import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,17 +14,14 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
 
     private final ConversationMemory memory;
     private final AgentRouter router;
-    private final Map<AgentType, Agent> agents;
+    private final Map<AgentType,Agent> agents;
 
 
-    public DefaultOrchestrator(ConversationMemory memory, AgentRouter router, OutOfScopeAgent outOfScopeAgent, BillingAgent billingAgent, TechnicalAgent technicalAgent){
+    public DefaultOrchestrator(ConversationMemory memory, AgentRouter router, Map<AgentType, Agent> agents) {
         this.memory = memory;
         this.router = router;
-        this.agents = Map.of(
-                AgentType.OUT_OF_SCOPE, outOfScopeAgent,
-                AgentType.BILLING, billingAgent,
-                AgentType.TECHNICAL, technicalAgent
-        );
+        this.agents = agents;
+
     }
 
     @Override

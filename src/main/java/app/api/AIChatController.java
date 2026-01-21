@@ -1,6 +1,6 @@
 package app.api;
 
-import app.conversation.ConversationOrchestrator;
+import app.orchestrator.ConversationOrchestrator;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

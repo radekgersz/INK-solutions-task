@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static app.agents.AgentType.TECHNICAL;
+
 @Component
 @AllArgsConstructor
 public class TechnicalAgent implements Agent {
@@ -45,6 +47,11 @@ public class TechnicalAgent implements Agent {
         }
         List<ChatMessage> prompt = buildPrompt(userText, documents);
         return llmClient.generateResponse(prompt);
+    }
+
+    @Override
+    public AgentType type() {
+        return TECHNICAL;
     }
 
     private List<ChatMessage> buildPrompt(String userText, List<Document> documents) {

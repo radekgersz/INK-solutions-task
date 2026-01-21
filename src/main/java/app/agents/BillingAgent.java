@@ -8,6 +8,7 @@ import app.conversation.Conversation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static app.agents.AgentType.BILLING;
 import static app.billing.BillingCatalog.formatBillingPeriod;
 
 @Component
@@ -32,6 +33,11 @@ public class BillingAgent implements Agent {
             case OUT_OF_SCOPE -> "I'm sorry, I cannot help you with that. I can only help with plans, subscriptions, or cancellations";
             case UNKNOWN -> "I can help with plans, subscriptions, or cancellations. What would you like to do?";
         };
+    }
+
+    @Override
+    public AgentType type() {
+        return BILLING;
     }
 
     private String handleCancel() {
