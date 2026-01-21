@@ -18,12 +18,14 @@ public class BillingIntentClassifier {
         - LIST_PLANS: user wants to see available plans or pricing
         - SUBSCRIBE_PLAN: user wants to start or change a subscription
         - CANCEL_SUBSCRIPTION: user wants to cancel or stop a subscription
+        - OUT_OF_SCOPE: user is asking something related to billing but not covered by the above intents
         - UNKNOWN: anything else
 
         Return ONLY one of:
         LIST_PLANS
         SUBSCRIBE_PLAN
         CANCEL_SUBSCRIPTION
+        OUT_OF_SCOPE
         UNKNOWN
 
         Do not explain your answer.
