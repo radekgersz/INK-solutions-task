@@ -7,7 +7,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-class Document {
+public class Document {
     String id;
     String title;
     String content;

@@ -1,12 +1,14 @@
 package app.technical;
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Getter
+@Component
 public class DocumentsCatalog {
     private final List<Document> documents = new ArrayList<>();
 
