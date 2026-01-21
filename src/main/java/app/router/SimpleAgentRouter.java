@@ -56,7 +56,7 @@ public class SimpleAgentRouter implements AgentRouter {
                 lastUserMessage
         );
 
-        String raw = llmClient.classifyMessage(prompt);
+        String raw = llmClient.generateResponse(prompt);
 
         String normalized = raw.trim()
                 .toUpperCase()

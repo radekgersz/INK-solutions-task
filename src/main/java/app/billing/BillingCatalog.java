@@ -1,4 +1,4 @@
-package app.data;
+package app.billing;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -15,3 +15,4 @@ public class BillingCatalog {
             new Plan("Enterprise", "Custom", BillingPeriod.ANNUAL)
     );
 }
+

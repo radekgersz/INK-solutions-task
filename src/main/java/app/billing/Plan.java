@@ -1,4 +1,4 @@
-package app.data;
+package app.billing;
 
 public record Plan(
         String name,

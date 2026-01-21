@@ -28,7 +28,7 @@ public class GeminiClient implements LlmClient {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public String classifyMessage(List<ChatMessage> messages) {
+    public String generateResponse(List<ChatMessage> messages) {
         try {
             GeminiRequestDTO request = createRequest(messages);
             String json = mapper.writeValueAsString(request);

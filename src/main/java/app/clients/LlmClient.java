@@ -7,5 +7,5 @@ import java.util.List;
 public interface LlmClient {
 
 
-    String classifyMessage(List<ChatMessage> messages);
+    String generateResponse(List<ChatMessage> messages);
 }

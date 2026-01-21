@@ -1,8 +1,6 @@
 package app.conversation;
 
-import app.agents.Agent;
-import app.agents.AgentType;
-import app.agents.EchoAgent;
+import app.agents.*;
 import org.springframework.stereotype.Component;
 import app.router.AgentRouter;
 
@@ -17,11 +15,13 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
     private final Map<AgentType, Agent> agents;
 
 
-    public DefaultOrchestrator(ConversationMemory memory, AgentRouter router, EchoAgent echoAgent){
+    public DefaultOrchestrator(ConversationMemory memory, AgentRouter router, EchoAgent echoAgent, BillingAgent billingAgent, TechnicalAgent technicalAgent){
         this.memory = memory;
         this.router = router;
         this.agents = Map.of(
-                AgentType.OUT_OF_SCOPE, echoAgent
+                AgentType.OUT_OF_SCOPE, echoAgent,
+                AgentType.BILLING, billingAgent,
+                AgentType.TECHNICAL, technicalAgent
         );
     }
 
