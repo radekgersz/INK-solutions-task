@@ -6,12 +6,13 @@ import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
 import app.properties.AgentAnswerProperties;
-import app.properties.PromptProperties;
+import app.properties.BillingPromptProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import static app.agents.AgentType.BILLING;
 import static app.billing.BillingCatalog.listAvailablePlans;
+import static app.billing.BillingIntent.OUT_OF_SCOPE;
 
 @Slf4j
 @Component
@@ -19,11 +20,19 @@ public class BillingAgent implements Agent {
     private final LlmClient llmClient;
     private final String intentPrompt;
     private final AgentAnswerProperties agentAnswerProperties;
+    private final String subscribePrompt;
+    private final String cancelPrompt;
+    private final String outOfScopePrompt;
+    private final String listPlansPrompt;
 
-    public BillingAgent(LlmClient llmClient, PromptProperties promptProperties, AgentAnswerProperties agentAnswerProperties) {
+    public BillingAgent(LlmClient llmClient, BillingPromptProperties  billingPromptProperties, AgentAnswerProperties agentAnswerProperties) {
         this.llmClient = llmClient;
-        this.intentPrompt = promptProperties.getIntent();
+        this.intentPrompt = billingPromptProperties.getIntent();
         this.agentAnswerProperties = agentAnswerProperties;
+        this.subscribePrompt = null;
+        this.cancelPrompt = null;
+        this.outOfScopePrompt = null;
+        this.listPlansPrompt = null;
     }
 
     @Override
@@ -36,11 +45,10 @@ public class BillingAgent implements Agent {
         BillingIntent intent = classify(userText);
 
         return switch (intent) {
-            case LIST_PLANS -> handleListPlans();
-            case SUBSCRIBE_PLAN -> handleSubscribe();
-            case CANCEL_SUBSCRIPTION -> handleCancel();
-            case OUT_OF_SCOPE -> handleOutOfScope();
-            case UNKNOWN -> handleUnknown();
+            case LIST_PLANS -> handleListPlans(conversation);
+            case SUBSCRIBE_PLAN -> handleSubscribe(conversation);
+            case CANCEL_SUBSCRIPTION -> handleCancel(conversation);
+            case OUT_OF_SCOPE -> handleOutOfScope(conversation);
         };
     }
 
@@ -56,7 +64,7 @@ public class BillingAgent implements Agent {
     }
     private BillingIntent parse(String raw) {
         if (raw == null) {
-            return BillingIntent.UNKNOWN;
+            return OUT_OF_SCOPE;
         }
 
         String normalized = raw.trim()
@@ -67,28 +75,30 @@ public class BillingAgent implements Agent {
             return BillingIntent.valueOf(normalized);
         } catch (IllegalArgumentException e) {
             log.warn("Unrecognized billing intent: '{}'", raw);
-            return BillingIntent.UNKNOWN;
+            return OUT_OF_SCOPE;
         }
     }
-    private String handleCancel() {
-        return agentAnswerProperties.getCancelSubscriptionMessage();
+    private String handleCancel(Conversation conversation) {
+        return respondAccordingly(conversation, cancelPrompt);
     }
-    private String handleSubscribe() {
-        return agentAnswerProperties.getSubscribeMessage();
+    private String handleSubscribe(Conversation conversation) {
+        return respondAccordingly(conversation, subscribePrompt);
     }
-    private String handleOutOfScope() {
-        return agentAnswerProperties.getOutOfScopeMessage();
-    }
-    private String handleUnknown() {
-        return agentAnswerProperties.getUnknownMessage();
+    private String handleOutOfScope(Conversation conversation) {
+        return  respondAccordingly(conversation, outOfScopePrompt);
     }
 
-    private String handleListPlans() {
-        return listAvailablePlans();
+    private String handleListPlans(Conversation conversation) {
+        return respondAccordingly(conversation, listPlansPrompt);
+    }
+
+    private String respondAccordingly(Conversation conversation, String prompt){
+        return "";
     }
     @Override
     public AgentType type() {
         return BILLING;
     }
+
 
 }

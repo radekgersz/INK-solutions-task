@@ -3,8 +3,7 @@ package app.agents;
 import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
-import app.conversation.Role;
-import app.properties.PromptProperties;
+import app.properties.TechnicalPromptProperties;
 import app.technical.Document;
 import app.technical.DocumentSelector;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static app.agents.AgentType.TECHNICAL;
+import static app.conversation.Role.SYSTEM;
+import static app.conversation.Role.USER;
 
 @Component
 public class TechnicalAgent implements Agent {
@@ -22,11 +23,11 @@ public class TechnicalAgent implements Agent {
 
     public TechnicalAgent(LlmClient llmClient,
                           DocumentSelector documentSelector,
-                          PromptProperties promptProperties) {
+                          TechnicalPromptProperties technicalPromptProperties) {
         this.llmClient = llmClient;
         this.documentSelector = documentSelector;
-        this.technicalPrompt = promptProperties.getTechnical();
-        this.noDocsPrompt = promptProperties.getNoDocs();
+        this.technicalPrompt = technicalPromptProperties.getTechnical();
+        this.noDocsPrompt = technicalPromptProperties.getNoDocs();
     }
     @Override
     public String respond(Conversation conversation) {
@@ -37,8 +38,8 @@ public class TechnicalAgent implements Agent {
         List<Document> documents = documentSelector.selectRelevant(userText, NUM_RELEVANT_DOCUMENTS);
         if (documents.isEmpty()) {
             return llmClient.generateResponse(List.of(
-                    new ChatMessage(Role.SYSTEM, noDocsPrompt),
-                    new ChatMessage(Role.USER, userText)
+                    new ChatMessage(SYSTEM, noDocsPrompt),
+                    new ChatMessage(USER, userText)
             ));
         }
         List<ChatMessage> prompt = buildPrompt(userText, documents);
@@ -60,11 +61,9 @@ public class TechnicalAgent implements Agent {
                     .append("\n\n");
         }
         return List.of(
-                new ChatMessage(Role.SYSTEM, technicalPrompt),
-                new ChatMessage(Role.SYSTEM, context.toString()),
-                new ChatMessage(Role.USER, userText)
+                new ChatMessage(SYSTEM, technicalPrompt),
+                new ChatMessage(SYSTEM, context.toString()),
+                new ChatMessage(USER, userText)
         );
     }
-
-
 }

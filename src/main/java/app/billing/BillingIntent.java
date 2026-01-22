@@ -5,5 +5,4 @@ public enum BillingIntent {
     CANCEL_SUBSCRIPTION,
     SUBSCRIBE_PLAN,
     OUT_OF_SCOPE,
-    UNKNOWN
 }

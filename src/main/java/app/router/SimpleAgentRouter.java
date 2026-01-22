@@ -1,13 +1,14 @@
 package app.router;
 
 import app.agents.AgentType;
+import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
-import app.clients.LlmClient;
-import app.properties.PromptProperties;
+import app.properties.RoutingPromptProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -18,10 +19,10 @@ public class SimpleAgentRouter implements AgentRouter {
     private final String initialPrompt;
     private static final int numMessages = 3;
 
-    public SimpleAgentRouter(LlmClient llmClient, PromptProperties promptProperties) {
+    public SimpleAgentRouter(LlmClient llmClient, RoutingPromptProperties routingPromptProperties) {
         this.llmClient = llmClient;
-        this.routingPrompt = promptProperties.getRouting();
-        this.initialPrompt = promptProperties.getInitialPrompt();
+        this.routingPrompt = routingPromptProperties.getRouting();
+        this.initialPrompt = routingPromptProperties.getInitialPrompt();
     }
 
     @Override
@@ -39,8 +40,7 @@ public class SimpleAgentRouter implements AgentRouter {
     private AgentType routeSubsequent(Conversation conversation) {
         List<ChatMessage> recentMessages = conversation
                 .getLastNMessages(numMessages);
-        List<ChatMessage> prompt = recentMessages.stream()
-                .toList();
+        LinkedList<ChatMessage> prompt = new LinkedList<>(recentMessages);
         prompt.addFirst(new ChatMessage(Role.SYSTEM, routingPrompt));
         return generateAndNormalize(prompt);
     }

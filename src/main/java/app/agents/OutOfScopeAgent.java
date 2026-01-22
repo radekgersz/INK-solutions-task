@@ -4,8 +4,7 @@ import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
-import app.properties.PromptProperties;
-import lombok.AllArgsConstructor;
+import app.properties.OutOfScopePromptProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,9 +16,9 @@ public class OutOfScopeAgent implements Agent {
     private final LlmClient llmClient;
     private final String outOfScope;
 
-    public OutOfScopeAgent(LlmClient llmClient, PromptProperties promptProperties) {
+    public OutOfScopeAgent(LlmClient llmClient, OutOfScopePromptProperties outOfScopePromptProperties) {
         this.llmClient = llmClient;
-        this.outOfScope = promptProperties.getOutOfScope();
+        this.outOfScope = outOfScopePromptProperties.getOutOfScope();
     }
     public String respond(Conversation conversation) {
         String userText = conversation.getLastUserMessage()
