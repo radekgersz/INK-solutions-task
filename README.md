@@ -9,7 +9,6 @@ The agents collaborate to route and respond to user queries appropriately, using
 
 A lightweight HTML frontend is included to allow interactive conversations through a browser, without manually sending JSON requests.
 
----
 
 ## Architecture Overview
 
@@ -17,7 +16,6 @@ A lightweight HTML frontend is included to allow interactive conversations throu
 - **LLM Provider:** Google Gemini (via Google AI Studio API)
 - **Frontend:** Minimal HTML/JS chat interface
 
----
 
 ## Requirements
 
@@ -33,7 +31,6 @@ You can provide it in **one of two ways**:
 ### 2. Google AI Studio Account
 A valid Google AI Studio account is required to issue requests to the Gemini API.
 
----
 
 ## Running the Application
 
