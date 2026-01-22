@@ -8,10 +8,8 @@ import app.properties.AgentAnswerProperties;
 import app.properties.BillingPromptProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import java.util.LinkedList;
 import java.util.List;
-
 import static app.agents.AgentType.BILLING;
 import static app.billing.BillingCatalog.listAvailablePlans;
 import static app.billing.BillingIntent.OUT_OF_SCOPE;
