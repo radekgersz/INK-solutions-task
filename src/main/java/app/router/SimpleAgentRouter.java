@@ -21,7 +21,7 @@ public class SimpleAgentRouter implements AgentRouter {
 
     public SimpleAgentRouter(LlmClient llmClient, RoutingPromptProperties routingPromptProperties) {
         this.llmClient = llmClient;
-        this.routingPrompt = routingPromptProperties.getRouting();
+        this.routingPrompt = routingPromptProperties.getRoutingPrompt();
         this.initialPrompt = routingPromptProperties.getInitialPrompt();
     }
 

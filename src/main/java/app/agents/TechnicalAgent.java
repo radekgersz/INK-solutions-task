@@ -26,8 +26,8 @@ public class TechnicalAgent implements Agent {
                           TechnicalPromptProperties technicalPromptProperties) {
         this.llmClient = llmClient;
         this.documentSelector = documentSelector;
-        this.technicalPrompt = technicalPromptProperties.getTechnical();
-        this.noDocsPrompt = technicalPromptProperties.getNoDocs();
+        this.technicalPrompt = technicalPromptProperties.getTechnicalPrompt();
+        this.noDocsPrompt = technicalPromptProperties.getNoDocsPrompt();
     }
     @Override
     public String respond(Conversation conversation) {

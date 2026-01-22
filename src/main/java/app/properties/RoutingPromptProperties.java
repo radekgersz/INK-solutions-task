@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "prompts.routing")
 public class RoutingPromptProperties {
-    private String routing;
+    private String routingPrompt;
     private String initialPrompt;
 
 }

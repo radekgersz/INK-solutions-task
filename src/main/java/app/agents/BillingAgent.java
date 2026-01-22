@@ -9,6 +9,7 @@ import app.properties.AgentAnswerProperties;
 import app.properties.BillingPromptProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import java.util.LinkedList;
 import java.util.List;
 import static app.agents.AgentType.BILLING;
 import static app.billing.BillingCatalog.listAvailablePlans;
@@ -20,19 +21,14 @@ public class BillingAgent implements Agent {
     private final LlmClient llmClient;
     private final String intentPrompt;
     private final AgentAnswerProperties agentAnswerProperties;
-    private final String subscribePrompt;
-    private final String cancelPrompt;
     private final String outOfScopePrompt;
-    private final String listPlansPrompt;
+    private static final int numMessages = 3;
 
     public BillingAgent(LlmClient llmClient, BillingPromptProperties  billingPromptProperties, AgentAnswerProperties agentAnswerProperties) {
         this.llmClient = llmClient;
-        this.intentPrompt = billingPromptProperties.getIntent();
+        this.intentPrompt = billingPromptProperties.getIntentPrompt();
         this.agentAnswerProperties = agentAnswerProperties;
-        this.subscribePrompt = null;
-        this.cancelPrompt = null;
-        this.outOfScopePrompt = null;
-        this.listPlansPrompt = null;
+        this.outOfScopePrompt = billingPromptProperties.getBillingOutOfScopePrompt();
     }
 
     @Override
@@ -45,9 +41,9 @@ public class BillingAgent implements Agent {
         BillingIntent intent = classify(userText);
 
         return switch (intent) {
-            case LIST_PLANS -> handleListPlans(conversation);
-            case SUBSCRIBE_PLAN -> handleSubscribe(conversation);
-            case CANCEL_SUBSCRIPTION -> handleCancel(conversation);
+            case LIST_PLANS -> handleListPlans();
+            case SUBSCRIBE_PLAN -> handleSubscribe();
+            case CANCEL_SUBSCRIPTION -> handleCancel();
             case OUT_OF_SCOPE -> handleOutOfScope(conversation);
         };
     }
@@ -78,22 +74,22 @@ public class BillingAgent implements Agent {
             return OUT_OF_SCOPE;
         }
     }
-    private String handleCancel(Conversation conversation) {
-        return respondAccordingly(conversation, cancelPrompt);
+    private String handleCancel() {
+        return agentAnswerProperties.getCancelSubscriptionMessage();
     }
-    private String handleSubscribe(Conversation conversation) {
-        return respondAccordingly(conversation, subscribePrompt);
+    private String handleSubscribe() {
+        return agentAnswerProperties.getSubscribeMessage();
     }
     private String handleOutOfScope(Conversation conversation) {
-        return  respondAccordingly(conversation, outOfScopePrompt);
+        List<ChatMessage> recentMessages = conversation
+                .getLastNMessages(numMessages);
+        LinkedList<ChatMessage> prompt = new LinkedList<>(recentMessages);
+        prompt.addFirst(new ChatMessage(Role.SYSTEM, outOfScopePrompt));
+        return llmClient.generateResponse(prompt);
     }
 
-    private String handleListPlans(Conversation conversation) {
-        return respondAccordingly(conversation, listPlansPrompt);
-    }
-
-    private String respondAccordingly(Conversation conversation, String prompt){
-        return "";
+    private String handleListPlans() {
+        return listAvailablePlans();
     }
     @Override
     public AgentType type() {

@@ -8,5 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "prompts.billing")
 public class BillingPromptProperties {
-    private String intent;
+    private String intentPrompt;
+    private String billingOutOfScopePrompt;
 }

@@ -8,5 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "prompts.outofscope")
 public class OutOfScopePromptProperties {
-    private String outOfScope;
+    private String outOfScopePrompt;
 }

@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "prompts.technical")
 public class TechnicalPromptProperties {
-    private String technical;
-    private String noDocs;
+    private String technicalPrompt;
+    private String noDocsPrompt;
 
 }

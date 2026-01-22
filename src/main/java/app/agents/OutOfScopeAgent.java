@@ -18,7 +18,7 @@ public class OutOfScopeAgent implements Agent {
 
     public OutOfScopeAgent(LlmClient llmClient, OutOfScopePromptProperties outOfScopePromptProperties) {
         this.llmClient = llmClient;
-        this.outOfScope = outOfScopePromptProperties.getOutOfScope();
+        this.outOfScope = outOfScopePromptProperties.getOutOfScopePrompt();
     }
     public String respond(Conversation conversation) {
         String userText = conversation.getLastUserMessage()
