@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import app.conversation.Conversation;
+import app.conversation.ChatMessage;
+import app.conversation.Role;
+
 @Component
 public class DocumentSelector {
     private static final int MIN_RELEVANCE_SCORE = 1;
@@ -44,7 +48,6 @@ public class DocumentSelector {
 
 
     }
-
     private int score(Document doc, Set<String> tokens) {
         int score = 0;
         for (String keyword : doc.getKeywords()) {

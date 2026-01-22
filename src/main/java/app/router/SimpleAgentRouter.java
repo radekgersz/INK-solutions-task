@@ -6,11 +6,13 @@ import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
 import app.properties.RoutingPromptProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class SimpleAgentRouter implements AgentRouter {
 
@@ -61,6 +63,7 @@ public class SimpleAgentRouter implements AgentRouter {
         String normalized = raw.trim()
                 .toUpperCase()
                 .replaceAll("[^A-Z_]", "");
+        log.info(normalized);
         return AgentType.valueOf(normalized);
     }
 }

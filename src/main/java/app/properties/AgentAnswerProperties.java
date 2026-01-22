@@ -10,6 +10,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AgentAnswerProperties {
     private String subscribeMessage;
     private String cancelSubscriptionMessage;
-    private String unknownMessage;
-    private String outOfScopeMessage;
 }
