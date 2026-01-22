@@ -46,6 +46,7 @@ public class GeminiClient implements LlmClient {
 
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
+            log.info(String.valueOf(response));
             GeminiResponseDTO geminiResponse = mapper.readValue(response.body(), GeminiResponseDTO.class);
             return extractText(geminiResponse);
 
@@ -70,12 +71,18 @@ public class GeminiClient implements LlmClient {
         );
     }
     private String extractText(GeminiResponseDTO response) {
-        return response.candidates()
-                .getFirst()
-                .content()
-                .parts()
-                .getFirst()
-                .text();
+        try {
+            return response.candidates()
+                    .getFirst()
+                    .content()
+                    .parts()
+                    .getFirst()
+                    .text();
+        }
+        catch (Exception e) {
+            log.error("Failed to extract text from Gemini response", e);
+            return "";
+        }
     }
 }
 

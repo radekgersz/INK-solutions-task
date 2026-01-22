@@ -7,6 +7,7 @@ import app.conversation.Role;
 import app.properties.OutOfScopePromptProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static app.agents.AgentType.OUT_OF_SCOPE;
@@ -14,21 +15,17 @@ import static app.agents.AgentType.OUT_OF_SCOPE;
 @Component
 public class OutOfScopeAgent implements Agent {
     private final LlmClient llmClient;
-    private final String outOfScope;
+    private final String outOfScopePrompt;
+    private static final int NUM_MESSAGES = 3;
 
     public OutOfScopeAgent(LlmClient llmClient, OutOfScopePromptProperties outOfScopePromptProperties) {
         this.llmClient = llmClient;
-        this.outOfScope = outOfScopePromptProperties.getOutOfScopePrompt();
+        this.outOfScopePrompt = outOfScopePromptProperties.getOutOfScopePrompt();
     }
     public String respond(Conversation conversation) {
-        String userText = conversation.getLastUserMessage()
-                .orElseThrow()
-                .content();
-
-        List<ChatMessage> prompt = List.of(
-                new ChatMessage(Role.SYSTEM, outOfScope),
-                new ChatMessage(Role.USER, userText)
-        );
+        List<ChatMessage> chatMessages = conversation.getLastNMessages(NUM_MESSAGES);
+        LinkedList<ChatMessage> prompt = new LinkedList<>(chatMessages);
+        prompt.addFirst(new ChatMessage(Role.SYSTEM, outOfScopePrompt));
         return llmClient.generateResponse(prompt);
     }
 
