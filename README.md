@@ -26,8 +26,6 @@ You can provide it in **one of two ways**:
 - As an environment variable  
 - By pasting it directly into the `apiKey` field in the `GeminiClient` class  
 
-> **Note:** Hardcoding the API key is acceptable for local testing, but not recommended for production use.
-
 ### 2. Google AI Studio Account
 A valid Google AI Studio account is required to issue requests to the Gemini API.
 
