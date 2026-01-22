@@ -22,9 +22,13 @@ public class DocumentSelector {
 
     }
 
-    public List<Document> selectRelevant(String userQuestion, int limit) {
+    public List<Document> selectRelevant(List<ChatMessage> messages, int limit) {
+        String combinedUserText = messages.stream()
+                .filter(m -> m.role() == Role.USER)
+                .map(ChatMessage::content)
+                .collect(Collectors.joining(" "));
 
-        Set<String> tokens = tokenize(userQuestion);
+        Set<String> tokens = tokenize(combinedUserText);
         List<ScoredDocument> scoredDocuments = catalog.getDocuments().stream()
                 .map(doc -> new ScoredDocument(doc, score(doc, tokens)))
                 .toList();

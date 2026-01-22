@@ -3,11 +3,13 @@ package app.agents;
 import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
+import app.conversation.Role;
 import app.properties.TechnicalPromptProperties;
 import app.technical.Document;
 import app.technical.DocumentSelector;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static app.agents.AgentType.TECHNICAL;
@@ -20,6 +22,8 @@ public class TechnicalAgent implements Agent {
     private final DocumentSelector documentSelector;
     private final String technicalPrompt;
     private final String noDocsPrompt;
+    private static final int NUM_MESSAGES = 3;
+    private static final int NUM_RELEVANT_DOCUMENTS = 3;
 
     public TechnicalAgent(LlmClient llmClient,
                           DocumentSelector documentSelector,
@@ -31,18 +35,14 @@ public class TechnicalAgent implements Agent {
     }
     @Override
     public String respond(Conversation conversation) {
-        String userText = conversation.getLastUserMessage()
-                .orElseThrow()
-                .content();
-        int NUM_RELEVANT_DOCUMENTS = 3;
-        List<Document> documents = documentSelector.selectRelevant(userText, NUM_RELEVANT_DOCUMENTS);
+        List<ChatMessage> chatMessages = conversation.getLastNMessages(NUM_MESSAGES);
+        List<Document> documents = documentSelector.selectRelevant(chatMessages, NUM_RELEVANT_DOCUMENTS);
         if (documents.isEmpty()) {
-            return llmClient.generateResponse(List.of(
-                    new ChatMessage(SYSTEM, noDocsPrompt),
-                    new ChatMessage(USER, userText)
-            ));
+            LinkedList<ChatMessage> prompt = new LinkedList<>(chatMessages);
+            prompt.addFirst(new ChatMessage(Role.SYSTEM, noDocsPrompt));
+            return llmClient.generateResponse(prompt);
         }
-        List<ChatMessage> prompt = buildPrompt(userText, documents);
+        List<ChatMessage> prompt = buildPrompt(chatMessages, documents);
         return llmClient.generateResponse(prompt);
     }
 
@@ -51,7 +51,7 @@ public class TechnicalAgent implements Agent {
         return TECHNICAL;
     }
 
-    private List<ChatMessage> buildPrompt(String userText, List<Document> documents) {
+    private List<ChatMessage> buildPrompt(List<ChatMessage> chatMessages, List<Document> documents) {
         StringBuilder context = new StringBuilder();
         for (Document document : documents) {
             context.append("###")
@@ -60,10 +60,9 @@ public class TechnicalAgent implements Agent {
                     .append(document.getContent())
                     .append("\n\n");
         }
-        return List.of(
-                new ChatMessage(SYSTEM, technicalPrompt),
-                new ChatMessage(SYSTEM, context.toString()),
-                new ChatMessage(USER, userText)
-        );
+        LinkedList<ChatMessage> prompt = new LinkedList<>(chatMessages);
+        prompt.addFirst(new ChatMessage(Role.SYSTEM, context.toString()));
+        prompt.addFirst(new ChatMessage(Role.SYSTEM, technicalPrompt));
+        return prompt;
     }
 }
