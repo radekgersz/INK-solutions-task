@@ -7,7 +7,6 @@ import app.conversation.Role;
 import app.properties.PromptProperties;
 import app.technical.Document;
 import app.technical.DocumentSelector;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

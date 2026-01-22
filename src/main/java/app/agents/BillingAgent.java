@@ -1,30 +1,29 @@
 package app.agents;
 
-import app.billing.BillingCatalog;
 import app.billing.BillingIntent;
-import app.billing.Plan;
 import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.conversation.Role;
+import app.properties.AgentAnswerProperties;
 import app.properties.PromptProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
-
 import static app.agents.AgentType.BILLING;
-import static app.billing.BillingCatalog.formatBillingPeriod;
+import static app.billing.BillingCatalog.listAvailablePlans;
 
+@Slf4j
 @Component
 public class BillingAgent implements Agent {
     private final LlmClient llmClient;
-    private final BillingCatalog billingCatalog;
     private final String intentPrompt;
+    private final AgentAnswerProperties agentAnswerProperties;
 
-    public BillingAgent(LlmClient llmClient, BillingCatalog billingCatalog, PromptProperties promptProperties) {
+    public BillingAgent(LlmClient llmClient, PromptProperties promptProperties, AgentAnswerProperties agentAnswerProperties) {
         this.llmClient = llmClient;
-        this.billingCatalog = billingCatalog;
         this.intentPrompt = promptProperties.getIntent();
+        this.agentAnswerProperties = agentAnswerProperties;
     }
 
     @Override
@@ -40,68 +39,19 @@ public class BillingAgent implements Agent {
             case LIST_PLANS -> handleListPlans();
             case SUBSCRIBE_PLAN -> handleSubscribe();
             case CANCEL_SUBSCRIPTION -> handleCancel();
-            case OUT_OF_SCOPE ->
-                    "I'm sorry, I cannot help you with that. I can only help with plans, subscriptions, or cancellations";
-            case UNKNOWN -> "I can help with plans, subscriptions, or cancellations. What would you like to do?";
+            case OUT_OF_SCOPE -> handleOutOfScope();
+            case UNKNOWN -> handleUnknown();
         };
     }
 
-    @Override
-    public AgentType type() {
-        return BILLING;
-    }
 
-    private String handleCancel() {
-        return """
-        To cancel a subscription, please provide the following details:
-
-        - Client ID
-        - Billing email address
-        - Reason for cancellation (optional)
-
-        Please reply in the following format:
-        Client ID: <your client id>
-        Email: <your email>
-        Reason: <your reason>
-        """;
-    }
-    private String handleSubscribe() {
-        return """
-                To start a subscription, please provide the following details:
-                
-                - Plan name (Free, Pro, Custom, Enterprise)
-                - Billing email address
-                
-                Please reply in the following format:
-                Plan: <plan name>
-                Email: <your email>
-                """;
-        }
-
-    private String handleListPlans() {
-
-        StringBuilder sb = new StringBuilder("Here are our available plans:\n");
-
-        for (Plan plan : billingCatalog.getPlans()) {
-            sb.append("- ")
-                    .append(plan.name())
-                    .append(": ")
-                    .append(plan.price())
-                    .append(" (")
-                    .append(formatBillingPeriod(plan.billingPeriod()))
-                    .append(")\n");
-        }
-        return sb.toString();
-    }
     public BillingIntent classify(String userMessage) {
 
         List<ChatMessage> prompt = List.of(
                 new ChatMessage(Role.SYSTEM, intentPrompt),
                 new ChatMessage(Role.USER, userMessage)
         );
-
         String raw = llmClient.generateResponse(prompt);
-
         return parse(raw);
     }
     private BillingIntent parse(String raw) {
@@ -116,8 +66,29 @@ public class BillingAgent implements Agent {
         try {
             return BillingIntent.valueOf(normalized);
         } catch (IllegalArgumentException e) {
+            log.warn("Unrecognized billing intent: '{}'", raw);
             return BillingIntent.UNKNOWN;
         }
+    }
+    private String handleCancel() {
+        return agentAnswerProperties.getCancelSubscriptionMessage();
+    }
+    private String handleSubscribe() {
+        return agentAnswerProperties.getSubscribeMessage();
+    }
+    private String handleOutOfScope() {
+        return agentAnswerProperties.getOutOfScopeMessage();
+    }
+    private String handleUnknown() {
+        return agentAnswerProperties.getUnknownMessage();
+    }
+
+    private String handleListPlans() {
+        return listAvailablePlans();
+    }
+    @Override
+    public AgentType type() {
+        return BILLING;
     }
 
 }

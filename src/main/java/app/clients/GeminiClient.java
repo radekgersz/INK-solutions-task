@@ -33,7 +33,6 @@ public class GeminiClient implements LlmClient {
     @Override
     public String generateResponse(List<ChatMessage> messages) {
         String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
-        log.info(API_URL);
 
         try {
             GeminiRequestDTO request = createRequest(messages);

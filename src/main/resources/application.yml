@@ -75,3 +75,29 @@ prompts:
     - If the current message changes topic, classify the new topic.
     - If the message is ambiguous or just conversational, choose OUT_OF_SCOPE.
     - Output ONLY the category name. No explanation.
+answers:
+  subscribe-message: |
+    To start a subscription, please provide the following details:
+
+    - Plan name (Free, Pro, Custom, Enterprise)
+    - Billing email address
+
+    Please reply in the following format:
+    Plan: <plan name>
+    Email: <your email>
+  cancel-subscription-message: |
+    To cancel a subscription, please provide the following details:
+    
+    - Client ID
+    - Billing email address
+    - Reason for cancellation (optional)
+    
+    Please reply in the following format:
+    Client ID: <your client id>
+    Email: <your email>
+    Reason: <your reason>
+
+  out-of-scope-message: |
+    I'm sorry, I cannot help you with that. I can only help with plans, subscriptions, or cancellations
+  unknown-message: |
+    I can help with plans, subscriptions, or cancellations. What would you like to do?
