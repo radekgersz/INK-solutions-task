@@ -34,7 +34,7 @@ A valid Google AI Studio account is required to issue requests to the Gemini API
 
 1. Clone the repository
 2. Configure the API key, by setting an env variable or paste it directly
-3. Start the application bu running the main function in **Application** class
+3. Start the application by running the main function in **Application** class
 4. Once the server is running, navigate to http://localhost:8080/chat.html to interact with the bot
 
 ## Known Issues 
