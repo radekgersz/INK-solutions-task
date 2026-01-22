@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 public class GeminiClient implements LlmClient {
 
     @Value("${gemini.model}")
-    private static String GEMINI_MODEL;
+    private String GEMINI_MODEL;
     @Value("${base.url}")
-    private static String BASE_URL;
+    private String BASE_URL;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String apiKey = System.getenv("GEMINI_API_KEY");
@@ -33,6 +33,8 @@ public class GeminiClient implements LlmClient {
     @Override
     public String generateResponse(List<ChatMessage> messages) {
         String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
+        log.info(API_URL);
+
         try {
             GeminiRequestDTO request = createRequest(messages);
             String json = mapper.writeValueAsString(request);
@@ -46,7 +48,6 @@ public class GeminiClient implements LlmClient {
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
             GeminiResponseDTO geminiResponse = mapper.readValue(response.body(), GeminiResponseDTO.class);
-            log.info(String.valueOf(geminiResponse));
             return extractText(geminiResponse);
 
         } catch (Exception e) {

@@ -13,4 +13,5 @@ public class PromptProperties {
     private String intent;
     private String outOfScope;
     private String noDocs;
+    private String initialPrompt;
 }
