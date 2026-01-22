@@ -4,16 +4,19 @@ import app.billing.BillingIntent;
 import app.clients.LlmClient;
 import app.conversation.ChatMessage;
 import app.conversation.Conversation;
-import app.conversation.Role;
 import app.properties.AgentAnswerProperties;
 import app.properties.BillingPromptProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import static app.agents.AgentType.BILLING;
 import static app.billing.BillingCatalog.listAvailablePlans;
 import static app.billing.BillingIntent.OUT_OF_SCOPE;
+import static app.conversation.Role.SYSTEM;
+import static app.conversation.Role.USER;
 
 @Slf4j
 @Component
@@ -52,8 +55,8 @@ public class BillingAgent implements Agent {
     public BillingIntent classify(String userMessage) {
 
         List<ChatMessage> prompt = List.of(
-                new ChatMessage(Role.SYSTEM, intentPrompt),
-                new ChatMessage(Role.USER, userMessage)
+                new ChatMessage(SYSTEM, intentPrompt),
+                new ChatMessage(USER, userMessage)
         );
         String raw = llmClient.generateResponse(prompt);
         return parse(raw);
@@ -84,7 +87,7 @@ public class BillingAgent implements Agent {
         List<ChatMessage> recentMessages = conversation
                 .getLastNMessages(numMessages);
         LinkedList<ChatMessage> prompt = new LinkedList<>(recentMessages);
-        prompt.addFirst(new ChatMessage(Role.SYSTEM, outOfScopePrompt));
+        prompt.addFirst(new ChatMessage(SYSTEM, outOfScopePrompt));
         return llmClient.generateResponse(prompt);
     }
 

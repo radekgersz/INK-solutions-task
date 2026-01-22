@@ -37,7 +37,6 @@ public class GeminiClient implements LlmClient {
         try {
             GeminiRequestDTO request = createRequest(messages);
             String json = mapper.writeValueAsString(request);
-
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL + "?key=" + apiKey))
                     .header("Content-Type", "application/json")
@@ -45,8 +44,6 @@ public class GeminiClient implements LlmClient {
                     .build();
 
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-            log.info(String.valueOf(response));
             GeminiResponseDTO geminiResponse = mapper.readValue(response.body(), GeminiResponseDTO.class);
             return extractText(geminiResponse);
 
