@@ -1,5 +1,6 @@
 package app.api;
 
+import app.llm.GeminiClient;
 import app.orchestrator.ConversationOrchestrator;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,24 +14,28 @@ import java.util.UUID;
 public class AIChatController {
 
     private final ConversationOrchestrator conversationOrchestrator;
+    private final GeminiClient geminiClientl;
 
-    public AIChatController(ConversationOrchestrator conversationOrchestrator) {
+    public AIChatController(ConversationOrchestrator conversationOrchestrator, GeminiClient geminiClientl) {
+        this.geminiClientl = geminiClientl;
         this.conversationOrchestrator = conversationOrchestrator;
     }
 
     @PostMapping
-    public AIResponse chat(@RequestBody UserRequest request) {
+    public String chat(@RequestBody UserRequest request) {
 
         UUID conversationId = request.conversationId() != null
                 ? UUID.fromString(request.conversationId())
                 : UUID.randomUUID();
 
-        String reply = conversationOrchestrator.handleMessage(
-                request.conversationHistory(),
-                request.userInput()
-        );
+        geminiClientl.generateResponse();
+        return "";
+//        String reply = conversationOrchestrator.handleMessage(
+//                request.conversationHistory(),
+//                request.userInput()
+//        );
 
-        return new AIResponse(conversationId.toString(), reply);
+//        return new AIResponse(conversationId.toString(), reply);
     }
 }
 

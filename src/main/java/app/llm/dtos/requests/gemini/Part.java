@@ -1,5 +1,18 @@
 package app.llm.dtos.requests.gemini;
 
-public record Part(
-        String text
-) {}
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class Part {
+
+    private String text;
+
+    public Part() {}
+
+    public Part(String text) {
+        this.text = text;
+    }
+}
+
