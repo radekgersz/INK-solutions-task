@@ -33,34 +33,10 @@ public class GeminiClient implements LlmClient {
     private final String apiKey = System.getenv("GEMINI_API_KEY");
     private final ObjectMapper mapper = new ObjectMapper();
 
+
     @Override
-    public LlmResponse generateResponse(
-            List<ChatMessage> messages,
-            List<ToolSchema> toolSchemas
-    ) {
-
-        GeminiRequestDTO request = createRequest(messages, toolSchemas);
-        String apiUrl = BASE_URL + GEMINI_MODEL + ":generateContent";
-
-        try {
-            String json = mapper.writeValueAsString(request);
-
-            HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .uri(URI.create(apiUrl + "?key=" + apiKey))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
-
-            HttpResponse<String> response =
-                    httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-            JsonNode root = mapper.readTree(response.body());
-
-            return parseResponse(root);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public LlmResponse generateResponse(List<ChatMessage> messages, List<ToolSchema> toolSchemas) {
+        return null;
     }
 }
 
