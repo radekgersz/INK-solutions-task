@@ -1,4 +1,4 @@
-package app.clients.dtos.requests.gemini;
+package app.llm.dtos.requests.gemini;
 
 public record GenerationConfig(
         double temperature

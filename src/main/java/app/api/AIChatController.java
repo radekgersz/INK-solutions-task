@@ -25,9 +25,9 @@ public class AIChatController {
                 ? UUID.fromString(request.conversationId())
                 : UUID.randomUUID();
 
-        String reply = conversationOrchestrator.handleUserMessage(
-                conversationId,
-                request.message()
+        String reply = conversationOrchestrator.handleMessage(
+                request.conversationHistory(),
+                request.userInput()
         );
 
         return new AIResponse(conversationId.toString(), reply);

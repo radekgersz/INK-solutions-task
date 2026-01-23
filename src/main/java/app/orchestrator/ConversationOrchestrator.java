@@ -1,7 +1,9 @@
 package app.orchestrator;
 
-import java.util.UUID;
+import app.conversation.ChatMessage;
+
+import java.util.List;
 
 public interface ConversationOrchestrator {
-    String handleUserMessage(UUID conversationId, String userMessage);
+    String handleMessage(List<ChatMessage> conversationHistory, String userInput);
 }
