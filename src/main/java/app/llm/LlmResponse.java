@@ -2,27 +2,23 @@ package app.llm;
 
 import app.tools.ToolCall;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
+@Setter
 public class LlmResponse {
 
     private final String text;
-    private final ToolCall toolCall;
+    private final List<ToolCall> toolCalls;
 
-    private LlmResponse(String text, ToolCall toolCall) {
+    public LlmResponse(String text, List<ToolCall> toolCalls) {
         this.text = text;
-        this.toolCall = toolCall;
-    }
-
-    public static LlmResponse text(String text) {
-        return new LlmResponse(text, null);
-    }
-
-    public static LlmResponse toolCall(ToolCall call) {
-        return new LlmResponse(null, call);
+        this.toolCalls = toolCalls;
     }
 
     public boolean hasToolCall() {
-        return toolCall != null;
+        return !toolCalls.isEmpty();
     }
 }

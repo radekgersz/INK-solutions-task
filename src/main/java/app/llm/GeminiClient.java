@@ -1,9 +1,14 @@
 package app.llm;
 
 import app.conversation.ChatMessage;
+import app.conversation.Conversation;
 import app.llm.dtos.requests.gemini.*;
 
+import app.llm.dtos.responses.gemini.ContentResponseDTO;
+import app.llm.dtos.responses.gemini.FunctionCallResponseDTO;
+import app.llm.dtos.responses.gemini.PartResponseDTO;
 import app.llm.dtos.responses.gemini.ResponseDTO;
+import app.tools.ToolCall;
 import app.tools.ToolSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +19,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +38,7 @@ public class GeminiClient implements LlmClient {
 
 
 
-    public String generateResponse() {
+    public LlmResponse generateResponse(Conversation conversation, List<ToolSchema> schema) {
         String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
         try {
             RequestDTO request = createRequest();
@@ -47,13 +53,56 @@ public class GeminiClient implements LlmClient {
             ObjectMapper mapper = new ObjectMapper();
 
             ResponseDTO dto = mapper.readValue(response.body(), ResponseDTO.class);
-            return "";
+            return parseResponse(dto);
 
         } catch (Exception e) {
             throw new RuntimeException("Gemini API call failed", e);
         }
 
     }
+
+    private LlmResponse parseResponse(ResponseDTO dto) {
+        if (dto == null || dto.getCandidates() == null || dto.getCandidates().isEmpty()) {
+            return new LlmResponse("", List.of());
+        }
+
+        ContentResponseDTO content = dto.getCandidates().getFirst().getContent();
+
+        if (content == null || content.getParts() == null) {
+            return new LlmResponse("", List.of());
+        }
+
+        StringBuilder textBuilder = new StringBuilder();
+        List<ToolCall> toolCalls = new ArrayList<>();
+
+        for (PartResponseDTO part : content.getParts()) {
+            if (part == null) {
+                continue;
+            }
+
+            // Collect text
+            if (part.getText() != null) {
+                textBuilder.append(part.getText());
+            }
+
+            // Collect function calls
+            if (part.getFunctionCall() != null) {
+                toolCalls.add(mapToToolCall(part.getFunctionCall()));
+            }
+        }
+
+        return new LlmResponse(
+                textBuilder.toString(),
+                List.copyOf(toolCalls)
+        );
+    }
+    private ToolCall mapToToolCall(FunctionCallResponseDTO dto) {
+        return new ToolCall(
+                dto.getName(),
+                dto.getArgs()
+        );
+    }
+
 
     private RequestDTO createRequest() {
 
@@ -93,9 +142,5 @@ public class GeminiClient implements LlmClient {
         );
     }
 
-    @Override
-    public String generateResponse(List<ChatMessage> messages, List<ToolSchema> toolSchemas) {
-        return "";
-    }
 }
 

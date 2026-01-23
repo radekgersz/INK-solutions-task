@@ -1,6 +1,7 @@
 package app.orchestrator;
 
 import app.conversation.ChatMessage;
+import app.conversation.Conversation;
 import app.llm.LlmClient;
 import app.llm.LlmResponse;
 import app.tools.ToolCall;
@@ -17,35 +18,29 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
     private final ToolRegistry toolRegistry;
 
     @Override
-    public String handleMessage(List<ChatMessage> conversationHistory, String userInput) {
+    public String handleMessage(Conversation conversation, String userInput) {
+
+        //make an initial user message, potentially a tool call
+         LlmResponse response = llmClient.generateResponse(
+                conversation,
+                toolRegistry.getToolSchemas()
+        );
+
+        if (!response.hasToolCall()) {
+            conversation.addAssistantMessage(userInput);
+            return response.getText();
+        }
+        List<ToolCall> toolCalls = response.getToolCalls();
+//        String toolResult = toolRegistry.execute(toolCall);
+//
+//        conversationHistory.add(
+//                ChatMessage.toolResult(
+//                        toolCall.name(),
+//                        toolResult
+//                )
+//        );
         return "";
-//
-//        conversationHistory.add(ChatMessage.user(userInput));
-//
-//        while (true) {
-//            LlmResponse response = llmClient.generateResponse(
-//                    conversationHistory,
-//                    toolRegistry.getToolSchemas()
-//            );
-//
-//            // Case 1: LLM produced a normal response
-//            if (!response.hasToolCall()) {
-//                conversationHistory.add(
-//                        ChatMessage.assistant(response.getText())
-//                );
-//                return response.getText();
-//            }
-//            ToolCall toolCall = response.getToolCall();
-//            String toolResult = toolRegistry.execute(toolCall);
-//
-//            // Feed tool result back to LLM
-//            conversationHistory.add(
-//                    ChatMessage.toolResult(
-//                            toolCall.name(),
-//                            toolResult
-//                    )
-//            );
-//        }
-//    }
     }
 }
+
+

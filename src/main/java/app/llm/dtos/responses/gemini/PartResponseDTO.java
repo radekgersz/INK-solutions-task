@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class PartResponseDTO {
 
+    private String text;
     private FunctionCallResponseDTO functionCall;
 
     public PartResponseDTO() {}
