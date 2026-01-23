@@ -22,12 +22,13 @@ public class ToolRegistry {
     }
 
     public String execute(ToolCall call) {
-        Tool tool = tools.get(call.getName());
+        Tool tool = tools.get(call.name());
         if (tool == null) {
             throw new IllegalStateException(
-                    "Unknown tool requested: " + call.getName()
+                    "Unknown tool requested: " + call.name()
             );
         }
-        return tool.execute(call.getArguments());
+        return null;
+//        return tool.execute(call.arguments());
     }
 }
