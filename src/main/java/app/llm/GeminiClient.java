@@ -53,6 +53,9 @@ public class GeminiClient implements LlmClient {
             ObjectMapper mapper = new ObjectMapper();
 
             ResponseDTO dto = mapper.readValue(response.body(), ResponseDTO.class);
+            log.info(response.body());
+            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto));
+            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(parseResponse(dto)));
             return parseResponse(dto);
 
         } catch (Exception e) {
@@ -107,7 +110,7 @@ public class GeminiClient implements LlmClient {
     private RequestDTO createRequest() {
 
         // --- parts ---
-        Part part = new Part("What is the weather like on Mars?");
+        Part part = new Part("What is the weather like in Warsaw and Tokyo and Delhi?");
         Content content = new Content(
                 "user",
                 List.of(part)
@@ -141,6 +144,5 @@ public class GeminiClient implements LlmClient {
                 List.of(tool)
         );
     }
-
 }
 
