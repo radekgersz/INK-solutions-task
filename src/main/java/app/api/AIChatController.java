@@ -25,7 +25,7 @@ public class AIChatController {
     }
 
     @PostMapping
-    public String chat(@RequestBody UserRequest request) {
+    public AIResponse chat(@RequestBody UserRequest request) {
 
         UUID conversationId = request.conversationId() != null
                 ? UUID.fromString(request.conversationId())
@@ -38,9 +38,7 @@ public class AIChatController {
                 conversation,
                 request.message()
         );
-        log.info(reply);
-        return "";
-//        return new AIResponse(conversationId.toString(), reply);
+        return new AIResponse(conversationId.toString(), reply);
     }
 }
 

@@ -57,9 +57,6 @@ public class GeminiClient implements LlmClient {
             ObjectMapper mapper = new ObjectMapper();
 
             ResponseDTO dto = mapper.readValue(response.body(), ResponseDTO.class);
-            log.info(response.body());
-            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto));
-            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(parseResponse(dto)));
             return parseResponse(dto);
 
         } catch (Exception e) {

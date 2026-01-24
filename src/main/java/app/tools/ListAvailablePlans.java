@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class ListAvailablePlans implements Tool {
     @Override
     public String name() {
-        return "listAvailablePlans";
+        return "list_available_plans";
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ListAvailablePlans implements Tool {
     }
 
     @Override
-    public String execute(Map<String, Object> arguments) {
+    public String execute(Map<String, String> arguments) {
         return "";
     }
 }

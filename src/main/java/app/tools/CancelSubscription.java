@@ -23,7 +23,7 @@ public class CancelSubscription implements Tool{
     }
 
     @Override
-    public String execute(Map<String, Object> arguments) {
+    public String execute(Map<String, String> arguments) {
         return "    To cancel a subscription, please provide the following details:\n" +
                 "    \n" +
                 "    - Client ID\n" +

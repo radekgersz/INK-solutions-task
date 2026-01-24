@@ -23,7 +23,7 @@ public class Subscribe implements Tool{
     }
 
     @Override
-    public String execute(Map<String, Object> arguments) {
+    public String execute(Map<String, String> arguments) {
         return "    To start a subscription, please provide the following details:\n" +
                 "\n" +
                 "    - Plan name (Free, Pro, Custom, Enterprise)\n" +

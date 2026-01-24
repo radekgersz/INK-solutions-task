@@ -10,7 +10,7 @@ import java.util.Map;
 public class FunctionCallResponseDTO {
 
     private String name;
-    private Map<String, Object> args;
+    private Map<String, String> args;
 
     public FunctionCallResponseDTO() {}
 }
