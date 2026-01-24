@@ -8,11 +8,13 @@ import lombok.Setter;
 public class Part {
 
     private String text;
-
-    public Part() {}
+    private FunctionResponse functionResponse;
 
     public Part(String text) {
         this.text = text;
+    }
+    public Part(FunctionResponse functionResponse) {
+        this.functionResponse = functionResponse;
     }
 }
 

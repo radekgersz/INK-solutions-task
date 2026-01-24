@@ -25,6 +25,9 @@ public class ListAvailablePlans implements Tool {
 
     @Override
     public String execute(Map<String, String> arguments) {
-        return "";
+        return "        \"Free – $0 / monthly, \" +\n" +
+                "        \"Plus – $20 / monthly, \" +\n" +
+                "        \"Pro – 100 / monthly, \" +\n" +
+                "        \"Enterprise – Custom / annual\";";
     }
 }

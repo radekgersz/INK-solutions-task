@@ -19,8 +19,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
-import static app.llm.GeminiParser.createRequest;
-import static app.llm.GeminiParser.parseResponse;
+import static app.llm.GeminiParser.*;
 
 @Component
 @Slf4j
@@ -34,18 +33,16 @@ public class GeminiClient implements LlmClient {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String apiKey = System.getenv("GEMINI_API_KEY");
     private final ObjectMapper mapper = new ObjectMapper();
-    private static final int NUM_MESSAGES = 5;
+    private static final int NUM_MESSAGES = 3;
 
 
     public LlmResponse generateResponse(Conversation conversation, ToolRegistry toolRegistry) {
-        String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
-        try {
 
+        try {
+            String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
             List<ChatMessage> lastMessages = conversation.getLastNMessages(NUM_MESSAGES);
-            log.info(String.valueOf(lastMessages));
-            Map<String,Tool> tools = toolRegistry.getTools();
-            RequestDTO request = createRequest(lastMessages,tools);
-            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));
+            Map<String, Tool> tools = toolRegistry.getTools();
+            RequestDTO request = createRequest(lastMessages, tools);
             String json = mapper.writeValueAsString(request);
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL + "?key=" + apiKey))
@@ -64,5 +61,30 @@ public class GeminiClient implements LlmClient {
         }
 
     }
-}
 
+    @Override
+    public LlmResponse generateToolResponse(Conversation conversation, List<Part> parts, ToolRegistry toolRegistry) {
+        try {
+            String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
+            List<ChatMessage> lastMessages = conversation.getLastNMessages(NUM_MESSAGES);
+            Map<String, Tool> tools = toolRegistry.getTools();
+            RequestDTO request = createToolRequest(lastMessages, tools, parts);
+            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));
+            String json = mapper.writeValueAsString(request);
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL + "?key=" + apiKey))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            log.info(String.valueOf(response.headers()));
+            ObjectMapper mapper = new ObjectMapper();
+            ResponseDTO dto = mapper.readValue(response.body(), ResponseDTO.class);
+            return parseResponse(dto);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Gemini API call failed", e);
+        }
+    }
+}

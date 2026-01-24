@@ -1,16 +1,19 @@
 package app.orchestrator;
 
-import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.llm.LlmClient;
 import app.llm.LlmResponse;
+import app.llm.dtos.requests.gemini.FunctionResponse;
+import app.llm.dtos.requests.gemini.Part;
 import app.tools.ToolCall;
 import app.tools.ToolRegistry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @AllArgsConstructor
@@ -22,7 +25,6 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
     @Override
     public String handleMessage(Conversation conversation, String userInput) {
 
-        //make an initial user message, potentially a tool call
          LlmResponse response = llmClient.generateResponse(
                 conversation,
                 toolRegistry
@@ -33,11 +35,17 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
             return response.getText();
         }
         List<ToolCall> toolCalls = response.getToolCalls();
+        List<Part> parts = new ArrayList<>();
         for (ToolCall toolCall : toolCalls) {
             String toolResult = toolRegistry.execute(toolCall);
-            log.info(toolResult);
+            FunctionResponse functionResponse = new FunctionResponse();
+            functionResponse.setName(toolCall.name());
+            functionResponse.setResponse(Map.of("result", toolResult));
+            parts.add(new Part(functionResponse));
         }
-        return "";
+        LlmResponse modelResponse = llmClient.generateToolResponse(conversation, parts, toolRegistry);
+        conversation.addAssistantMessage(modelResponse.getText());
+        return modelResponse.getText();
     }
 }
 
