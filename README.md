@@ -1,10 +1,9 @@
-# Ink Solution – Multi-Agent AI Chatbot
+# Ink Solutions task – Multi-Agent AI Chatbot
 
-This repository contains a Java-based solution for the Ink coding task, implementing **two collaborating AI agents**:
+This repository contains a Java-based solution for the coding task for INK solutions, implementing **two collaborating AI agents**:
 
 - **Technical Specialist** – handles technical and product-related questions  
 - **Billing Specialist** – handles pricing, invoices, and account-related topics  
-
 The agents collaborate to route and respond to user queries appropriately, using the **Google Gemini model** via Google AI Studio.
 
 A lightweight HTML frontend is included to allow interactive conversations through a browser, without manually sending JSON requests.
