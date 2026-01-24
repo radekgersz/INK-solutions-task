@@ -10,11 +10,11 @@ import java.util.List;
 public class RequestDTO {
 
     private List<Content> contents;
-    private List<ToolDTO> tools;
+    private List<ToolRequestDTO> tools;
 
     public RequestDTO() {}
 
-    public RequestDTO(List<Content> contents, List<ToolDTO> tools) {
+    public RequestDTO(List<Content> contents, List<ToolRequestDTO> tools) {
         this.contents = contents;
         this.tools = tools;
     }

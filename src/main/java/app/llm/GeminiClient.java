@@ -4,12 +4,9 @@ import app.conversation.ChatMessage;
 import app.conversation.Conversation;
 import app.llm.dtos.requests.gemini.*;
 
-import app.llm.dtos.responses.gemini.ContentResponseDTO;
-import app.llm.dtos.responses.gemini.FunctionCallResponseDTO;
-import app.llm.dtos.responses.gemini.PartResponseDTO;
 import app.llm.dtos.responses.gemini.ResponseDTO;
-import app.tools.ToolCall;
-import app.tools.ToolSchema;
+import app.tools.Tool;
+import app.tools.ToolRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,9 +16,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static app.llm.GeminiParser.createRequest;
+import static app.llm.GeminiParser.parseResponse;
 
 @Component
 @Slf4j
@@ -35,13 +34,18 @@ public class GeminiClient implements LlmClient {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String apiKey = System.getenv("GEMINI_API_KEY");
     private final ObjectMapper mapper = new ObjectMapper();
+    private static final int NUM_MESSAGES = 5;
 
 
-
-    public LlmResponse generateResponse(Conversation conversation, List<ToolSchema> schema) {
+    public LlmResponse generateResponse(Conversation conversation, ToolRegistry toolRegistry) {
         String API_URL = BASE_URL + GEMINI_MODEL + ":generateContent";
         try {
-            RequestDTO request = createRequest();
+
+            List<ChatMessage> lastMessages = conversation.getLastNMessages(NUM_MESSAGES);
+            Map<String,Tool> tools = toolRegistry.getTools();
+            RequestDTO request = createRequest(lastMessages,tools);
+//            RequestDTO request = createDummyRequest();
+            log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));
             String json = mapper.writeValueAsString(request);
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL + "?key=" + apiKey))
@@ -64,50 +68,8 @@ public class GeminiClient implements LlmClient {
 
     }
 
-    private LlmResponse parseResponse(ResponseDTO dto) {
-        if (dto == null || dto.getCandidates() == null || dto.getCandidates().isEmpty()) {
-            return new LlmResponse("", List.of());
-        }
 
-        ContentResponseDTO content = dto.getCandidates().getFirst().getContent();
-
-        if (content == null || content.getParts() == null) {
-            return new LlmResponse("", List.of());
-        }
-
-        StringBuilder textBuilder = new StringBuilder();
-        List<ToolCall> toolCalls = new ArrayList<>();
-
-        for (PartResponseDTO part : content.getParts()) {
-            if (part == null) {
-                continue;
-            }
-
-            // Collect text
-            if (part.getText() != null) {
-                textBuilder.append(part.getText());
-            }
-
-            // Collect function calls
-            if (part.getFunctionCall() != null) {
-                toolCalls.add(mapToToolCall(part.getFunctionCall()));
-            }
-        }
-
-        return new LlmResponse(
-                textBuilder.toString(),
-                List.copyOf(toolCalls)
-        );
-    }
-    private ToolCall mapToToolCall(FunctionCallResponseDTO dto) {
-        return new ToolCall(
-                dto.getName(),
-                dto.getArgs()
-        );
-    }
-
-
-    private RequestDTO createRequest() {
+    private RequestDTO createDummyRequest() {
 
         // --- parts ---
         Part part = new Part("What is the weather like in Warsaw and Tokyo and Delhi?");
@@ -135,7 +97,7 @@ public class GeminiClient implements LlmClient {
                 parameters
         );
 
-        ToolDTO tool = new ToolDTO(
+        ToolRequestDTO tool = new ToolRequestDTO(
                 List.of(functionDeclaration)
         );
 

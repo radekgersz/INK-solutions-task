@@ -7,13 +7,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ToolDTO {
+public class ToolRequestDTO {
 
     private List<FunctionDeclaration> functionDeclarations;
 
-    public ToolDTO() {}
+    public ToolRequestDTO() {}
 
-    public ToolDTO(List<FunctionDeclaration> functionDeclarations) {
+    public ToolRequestDTO(List<FunctionDeclaration> functionDeclarations) {
         this.functionDeclarations = functionDeclarations;
     }
 

@@ -1,24 +1,19 @@
 package app.tools;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 @Component
+@Getter
 public class ToolRegistry {
 
     private final Map<String, Tool> tools = new HashMap<>();
 
     public ToolRegistry(List<Tool> toolList) {
         for (Tool tool : toolList) {
-            tools.put(tool.getName(), tool);
+            tools.put(tool.name(), tool);
         }
-    }
-
-    public List<ToolSchema> getToolSchemas() {
-        return tools.values()
-                .stream()
-                .map(Tool::toSchema)
-                .toList();
     }
 
     public String execute(ToolCall call) {
@@ -28,7 +23,6 @@ public class ToolRegistry {
                     "Unknown tool requested: " + call.name()
             );
         }
-        return null;
-//        return tool.execute(call.arguments());
+        return tool.execute(call.arguments());
     }
 }
