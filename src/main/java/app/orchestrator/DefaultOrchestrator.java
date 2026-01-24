@@ -29,7 +29,7 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
         );
 
         if (!response.hasToolCall()) {
-            conversation.addAssistantMessage(userInput);
+            conversation.addAssistantMessage(response.getText());
             return response.getText();
         }
         List<ToolCall> toolCalls = response.getToolCalls();
@@ -37,14 +37,6 @@ public class DefaultOrchestrator implements ConversationOrchestrator {
             String toolResult = toolRegistry.execute(toolCall);
             log.info(toolResult);
         }
-//        String toolResult = toolRegistry.execute(toolCall);
-//
-//        conversationHistory.add(
-//                ChatMessage.toolResult(
-//                        toolCall.name(),
-//                        toolResult
-//                )
-//        );
         return "";
     }
 }

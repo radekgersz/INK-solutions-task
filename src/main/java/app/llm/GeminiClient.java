@@ -42,9 +42,9 @@ public class GeminiClient implements LlmClient {
         try {
 
             List<ChatMessage> lastMessages = conversation.getLastNMessages(NUM_MESSAGES);
+            log.info(String.valueOf(lastMessages));
             Map<String,Tool> tools = toolRegistry.getTools();
             RequestDTO request = createRequest(lastMessages,tools);
-//            RequestDTO request = createDummyRequest();
             log.info(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(request));
             String json = mapper.writeValueAsString(request);
             HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -66,45 +66,6 @@ public class GeminiClient implements LlmClient {
             throw new RuntimeException("Gemini API call failed", e);
         }
 
-    }
-
-
-    private RequestDTO createDummyRequest() {
-
-        // --- parts ---
-        Part part = new Part("What is the weather like in Warsaw and Tokyo and Delhi?");
-        Content content = new Content(
-                "user",
-                List.of(part)
-        );
-
-        // --- function parameters schema ---
-        Property locationProperty = new Property(
-                "string",
-                "Name of a planet or city"
-        );
-
-        Parameters parameters = new Parameters(
-                "object",
-                Map.of("location", locationProperty),
-                List.of("location")
-        );
-
-        // --- function declaration ---
-        FunctionDeclaration functionDeclaration = new FunctionDeclaration(
-                "get_current_temperature",
-                "Returns the current temperature for a given location",
-                parameters
-        );
-
-        ToolRequestDTO tool = new ToolRequestDTO(
-                List.of(functionDeclaration)
-        );
-
-        return new RequestDTO(
-                List.of(content),
-                List.of(tool)
-        );
     }
 }
 
